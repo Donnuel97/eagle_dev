@@ -1,0 +1,134 @@
+{% extends 'main/admin_main.html' %}
+{% load static %}
+
+{% block content %}
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>DataSheet</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="index.html">Dashboard</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a href="index.html">Home</a>
+						</li>
+                        <li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a  href="admin_analytics.html">Analytics</a>
+						</li>
+                        <li><i class='bx bx-chevron-right' ></i></li>
+						<li class="active">
+							<a class="active" href="admin_analytics.html">Team</a>
+						</li>
+					</ul>
+				</div>
+				<div class="btn-download">
+					<button class="text" id="export-pdf">PDF</button>
+					<button id="downloadexcel">Excel</button>
+				</div>
+                
+			</div>
+            <ul class="box-info">
+				<li>
+                    <a href="{% url 'agent_list' %}">
+                        <i class='bx bx-user-circle'></i>
+                        <span class="text">
+                            <h3>{{total_agents}}</h3>
+                            <p>Total Agents</p>
+                        </span>
+                    </a>
+				</li>
+				<li>
+                    <a href="{% url 'customer_list' %}">
+                        <i class='bx bxs-group' ></i>
+                        <span class="text">
+                            <h3>{{total_customer}}</h3>
+                            <p>Total Clients</p>
+                        </span>
+                    </a>
+				</li>
+			</ul>
+
+			<div class="table-data">
+				<div class="order">
+					<div class="head">
+						<h3>Customer</h3>
+						<i class='bx bx-search' ></i>
+						<i class='bx bx-filter' ></i>
+					</div>
+					<!-- customer_list.html -->
+
+<table id="table">
+    <!-- Table headers -->
+    <thead>
+        <tr>
+            <th>ID No.</th>
+            <th>NAMES</th>
+            <th>EMAIL</th>
+            <th>PAYMENT CATEGORY</th>
+            <th>PAYMENT HISTORY</th>
+            <th>ACTION</th>  <!-- New column for edit button -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in customer_list %}
+        <tr>
+            <!-- Customer details -->
+            <td>{{ customer.customer_id }}</td>
+            <td>{{ customer.username }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.payment_category }}</td>
+            <td><a href="{% url 'admin_payment_history' user_id=customer.customer_id %}">View history</a></td>
+            <!-- Edit button/link -->
+            <td>
+				<a href="{% url 'customer_edit' pk=customer.pk %}">Edit</a> |
+				<a data-modal-target="#modal" data-customer-id="{{ customer.id }}" class="delete-button">Delete</a>
+			</td>
+        </tr>
+        {% empty %}
+        <!-- No data message -->
+        <tr>
+            <td colspan="6">No data available</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{%  include 'dashboard/admin/delete-customer.html' %}
+   
+  </div>
+  <div id="overlay"></div>
+			{% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+				</div>
+			</div>
+		</main>
+		<!-- MAIN -->
+	</section>
+	
+	<!-- CONTENT -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			// Find the active <li> element and remove the active class
+			var activeElement = document.querySelector(".side-menu.top .active");
+			if (activeElement) {
+				activeElement.classList.remove("active");
+			}
+		
+			// Find the desired <li> element and add the active class
+			var desiredElement = document.querySelector(".side-menu.top li:nth-child(5)");
+			if (desiredElement) {
+				desiredElement.classList.add("active");
+			}
+		});
+	</script>
+{% endblock %}
